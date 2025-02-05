@@ -10,20 +10,11 @@
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
-      overflow: hidden; /* pour empêcher le défilement quand le canvas est affiché */
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-    }
-
-    /* Canvas pour les feux d'artifice */
-    #fireworksCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none; /* permet de cliquer sur la page sans être bloqué par le canvas */
-      z-index: 1;
     }
 
     /* Conteneur du formulaire */
@@ -33,17 +24,15 @@
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       width: 350px;
-      z-index: 2; /* s'assure que le formulaire est au-dessus du canvas */
+      z-index: 2;
     }
 
-    /* Titre */
     .login-container h2 {
       text-align: center;
       margin-bottom: 1.5rem;
       color: #333;
     }
 
-    /* Labels et champs du formulaire */
     .login-container label {
       display: block;
       margin-bottom: 0.5rem;
@@ -61,7 +50,6 @@
       font-size: 1rem;
     }
 
-    /* Bouton de soumission */
     .login-container button {
       width: 100%;
       padding: 0.75rem;
@@ -78,7 +66,6 @@
       background: #0056b3;
     }
 
-    /* Extra informations */
     .login-container .extra {
       text-align: center;
       margin-top: 1rem;
@@ -88,9 +75,6 @@
   </style>
 </head>
 <body>
-  <!-- Canvas de fond pour les feux d'artifice -->
-  <canvas id="fireworksCanvas"></canvas>
-  
   <div class="login-container">
     <h2>Connexion</h2>
     <form action="{{ url_for('login') }}" method="post">
@@ -106,92 +90,5 @@
       <p>Bienvenue sur notre plateforme.</p>
     </div>
   </div>
-
-  <!-- JavaScript pour les feux d'artifice -->
-  <script>
-    const canvas = document.getElementById('fireworksCanvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let canvasWidth = window.innerWidth;
-    let canvasHeight = window.innerHeight;
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-
-    // Ajuster la taille du canvas lors du redimensionnement de la fenêtre
-    window.addEventListener('resize', () => {
-      canvasWidth = window.innerWidth;
-      canvasHeight = window.innerHeight;
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
-    });
-
-    // Classe Particle pour créer des particules de feu d'artifice
-    class Particle {
-      constructor(x, y, color) {
-        this.x = x;
-        this.y = y;
-        this.radius = Math.random() * 3 + 2;
-        this.color = color;
-        this.speed = Math.random() * 3 + 2;
-        this.angle = Math.random() * 2 * Math.PI;
-        this.velocityX = Math.cos(this.angle) * this.speed;
-        this.velocityY = Math.sin(this.angle) * this.speed;
-        this.alpha = 1;
-        this.decay = Math.random() * 0.02 + 0.01;
-      }
-      
-      update() {
-        this.x += this.velocityX;
-        this.y += this.velocityY;
-        this.alpha -= this.decay;
-      }
-      
-      draw() {
-        ctx.save();
-        ctx.globalAlpha = this.alpha;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    // Fonction pour créer des feux d'artifice à une position donnée
-    function createFireworks(x, y) {
-      const colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
-      const numParticles = 30;
-      for (let i = 0; i < numParticles; i++) {
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        particles.push(new Particle(x, y, color));
-      }
-    }
-
-    // Boucle d'animation
-    function animate() {
-      requestAnimationFrame(animate);
-      // Effet de fondu pour laisser un léger sillage
-      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-      
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.update();
-        p.draw();
-        if (p.alpha <= 0) {
-          particles.splice(i, 1);
-        }
-      }
-    }
-    animate();
-
-    // Déclenchement des feux d'artifice lors d'un appui sur une touche
-    document.addEventListener('keydown', (e) => {
-      // Position aléatoire pour l'effet (vous pouvez aussi baser sur la position du conteneur)
-      const x = Math.random() * canvasWidth;
-      const y = Math.random() * canvasHeight;
-      createFireworks(x, y);
-    });
-  </script>
 </body>
 </html>
