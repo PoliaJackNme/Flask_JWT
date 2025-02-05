@@ -27,7 +27,7 @@ def hello_world():
 def login():
     username = request.json.get("username", None)
     password = request.json.get("password", None)
-    if username != "test" or password != "test":
+    if (username not in ["test", "admin"]) or password != "test":
         return jsonify({"msg": "Mauvais utilisateur ou mot de passe"}), 401
 
     access_token = create_access_token(identity=username)
