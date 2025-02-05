@@ -40,6 +40,14 @@ def login():
 def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
-                                                                                                               
+
+@app.route("/admin", methods=["GET"])
+@jwt_required()
+def admin():
+    claims = get_jwt()  # Récupération des claims du token
+    if claims.get("roles") != "admin":  # Vérification du rôle admin
+        return jsonify({"msg": "Accès interdit : vous n'avez pas les droits d'administration"}), 403
+    return jsonify({"msg": "Bienvenue dans la zone admin"}), 200
+
 if __name__ == "__main__":
   app.run(debug=True)
