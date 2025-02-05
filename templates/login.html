@@ -1,94 +1,145 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Connexion</title>
-  <style>
-    /* Style global */
-    body {
-      background: #f0f2f5;
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+    <style>
+        /* Styles de base */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #111;
+            color: white;
+            margin: 0;
+            overflow: hidden;
+        }
 
-    /* Conteneur du formulaire */
-    .login-container {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      width: 350px;
-      z-index: 2;
-    }
+        /* Animation pour le fond */
+        @keyframes flashBackground {
+            0% { background-color: #ff0000; }
+            25% { background-color: #00ff00; }
+            50% { background-color: #0000ff; }
+            75% { background-color: #ffff00; }
+            100% { background-color: #ff00ff; }
+        }
 
-    .login-container h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      color: #333;
-    }
+        /* Formulaire stylisé */
+        .login-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+        }
 
-    .login-container label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #555;
-    }
+        input {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
 
-    .login-container input[type="text"],
-    .login-container input[type="password"] {
-      width: 100%;
-      padding: 0.75rem;
-      margin-bottom: 1.2rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-      font-size: 1rem;
-    }
+        button {
+            background-color: #ff5733;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 18px;
+        }
 
-    .login-container button {
-      width: 100%;
-      padding: 0.75rem;
-      background: #007bff;
-      border: none;
-      border-radius: 4px;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
+        button:hover {
+            background-color: #ff2e00;
+        }
 
-    .login-container button:hover {
-      background: #0056b3;
-    }
-
-    .login-container .extra {
-      text-align: center;
-      margin-top: 1rem;
-      color: #777;
-      font-size: 0.9rem;
-    }
-  </style>
+        /* Canvas pour les feux d'artifice */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
-  <div class="login-container">
-    <h2>Connexion</h2>
-    <form action="{{ url_for('login') }}" method="post">
-      <label for="username">Nom d'utilisateur</label>
-      <input type="text" id="username" name="username" placeholder="Votre nom d'utilisateur" required>
 
-      <label for="password">Mot de passe</label>
-      <input type="password" id="password" name="password" placeholder="Votre mot de passe" required>
+    <canvas id="fireworksCanvas"></canvas>
 
-      <button type="submit">Se connecter</button>
-    </form>
-    <div class="extra">
-      <p>Bienvenue sur notre plateforme.</p>
+    <div class="login-container">
+        <h2>Connexion</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+            <input type="password" id="password" placeholder="Mot de passe" required>
+            <button type="submit">Se connecter</button>
+        </form>
     </div>
-  </div>
+
+    <script>
+        const canvas = document.getElementById("fireworksCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function randomColor() {
+            return `hsl(${Math.random() * 360}, 100%, 60%)`;
+        }
+
+        function Firework(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 5 + 2;
+            this.color = randomColor();
+            this.velocityX = (Math.random() - 0.5) * 6;
+            this.velocityY = (Math.random() - 0.5) * 6;
+            this.alpha = 1;
+        }
+
+        Firework.prototype.update = function () {
+            this.x += this.velocityX;
+            this.y += this.velocityY;
+            this.alpha -= 0.02;
+        };
+
+        Firework.prototype.draw = function () {
+            ctx.globalAlpha = this.alpha;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        };
+
+        let fireworks = [];
+
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            fireworks = fireworks.filter(firework => firework.alpha > 0);
+            fireworks.forEach(firework => {
+                firework.update();
+                firework.draw();
+            });
+            requestAnimationFrame(animateFireworks);
+        }
+
+        document.addEventListener("keydown", (event) => {
+            for (let i = 0; i < 10; i++) {
+                fireworks.push(new Firework(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height
+                ));
+            }
+        });
+
+        animateFireworks();
+    </script>
+
 </body>
 </html>
