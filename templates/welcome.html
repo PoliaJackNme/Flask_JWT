@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Bienvenue</title>
+  <style>
+    /* Animation pour le fond : flashes de couleurs */
+    @keyframes flashBackground {
+      0% { background-color: #ff0000; }
+      25% { background-color: #00ff00; }
+      50% { background-color: #0000ff; }
+      75% { background-color: #ffff00; }
+      100% { background-color: #ff00ff; }
+    }
+
+    /* Animation pour le texte : rotation et clignotement */
+    @keyframes rotateBlink {
+      0% { transform: rotate(0deg); opacity: 1; }
+      25% { transform: rotate(90deg); opacity: 0.5; }
+      50% { transform: rotate(180deg); opacity: 0; }
+      75% { transform: rotate(270deg); opacity: 0.5; }
+      100% { transform: rotate(360deg); opacity: 1; }
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+    }
+
+    body {
+      animation: flashBackground 3s infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .welcome-text {
+      font-size: 4rem;
+      color: white;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+      animation: rotateBlink 3s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-text">
+    Bienvenue
+  </div>
+  
+  <script>
+    // Pour un effet "flash" supplémentaire, on peut ajouter des particules ou des effets JS.
+    // Voici un exemple simple qui crée des flashs aléatoires en injectant des divs colorées.
+
+    function createFlash() {
+      const flash = document.createElement('div');
+      flash.style.position = 'absolute';
+      flash.style.width = '100px';
+      flash.style.height = '100px';
+      flash.style.borderRadius = '50%';
+      flash.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+      flash.style.top = Math.random() * window.innerHeight + 'px';
+      flash.style.left = Math.random() * window.innerWidth + 'px';
+      flash.style.opacity = 0.8;
+      flash.style.transition = 'opacity 1s ease-out';
+      document.body.appendChild(flash);
+      setTimeout(() => {
+        flash.style.opacity = 0;
+        setTimeout(() => flash.remove(), 1000);
+      }, 500);
+    }
+
+    setInterval(createFlash, 300);
+  </script>
+</body>
+</html>
