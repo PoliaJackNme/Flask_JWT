@@ -3,17 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <title>Connexion</title>
+  <style>
+    /* Style global */
+    body {
+      background: #f0f2f5;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Conteneur du formulaire */
+    .login-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      width: 350px;
+    }
+
+    /* Titre */
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    /* Labels et champs du formulaire */
+    .login-container label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #555;
+    }
+
+    .login-container input[type="text"],
+    .login-container input[type="password"] {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+
+    /* Bouton de soumission */
+    .login-container button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #007bff;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .login-container button:hover {
+      background: #0056b3;
+    }
+
+    /* Lien d'inscription ou autres informations */
+    .login-container .extra {
+      text-align: center;
+      margin-top: 1rem;
+      color: #777;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-  <h2>Connexion</h2>
-  <form action="{{ url_for('login') }}" method="post">
-    <label for="username">Nom d'utilisateur :</label>
-    <input type="text" id="username" name="username" required>
-    <br>
-    <label for="password">Mot de passe :</label>
-    <input type="password" id="password" name="password" required>
-    <br>
-    <button type="submit">Se connecter</button>
-  </form>
+  <div class="login-container">
+    <h2>Connexion</h2>
+    <form action="{{ url_for('login') }}" method="post">
+      <label for="username">Nom d'utilisateur</label>
+      <input type="text" id="username" name="username" placeholder="Votre nom d'utilisateur" required>
+
+      <label for="password">Mot de passe</label>
+      <input type="password" id="password" name="password" placeholder="Votre mot de passe" required>
+
+      <button type="submit">Se connecter</button>
+    </form>
+    <div class="extra">
+      <p>Bienvenue sur notre plateforme.</p>
+    </div>
+  </div>
 </body>
 </html>
